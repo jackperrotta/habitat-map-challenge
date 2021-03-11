@@ -1,6 +1,6 @@
 # habitat-map-challenge
 
-### Summary
+### Challenge Summary
 A core part of our business is the ability to efficiently route our runners between restaurant pickups and customer deliveries, including 'batched' orders (runner has 2+ orders in their queue simultaneously). Dispatchers being able to visualize a runner's route is crucial to a smooth operation.
 
 The goal of this challenge is to build a small app to enter and visualize a route.
