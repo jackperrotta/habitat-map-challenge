@@ -8,8 +8,11 @@ The goal of this challenge is to build a small app to enter and visualize a rout
 The app will have three different components:
 
 TaskEnter - Address input using Google's Places Autocomplete widget. Task should be able to be marked as a pickup or dropoff, and submitted to TaskList
+
 TaskList - Ordered set of tasks that can be resorted (Pickup=>Dropoff=>Pickup=>Dropoff to Pickup=>Pickup=>Dropoff=>Dropoff)
+
 TaskMap - Display Pickup and Dropoff markers in order, with route in between, using this example + the additional parameters of Google's DirectionService API for waypoints.
+
 You can use the React/Typescript/Node.js boilerplate at the root of this repo OR with the frameworks/tools of your choice, no penalty either way!
 
 ## Notes:
