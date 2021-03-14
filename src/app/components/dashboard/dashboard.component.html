@@ -1,2 +1,39 @@
-<p>dashboard works!</p>
-<div id="map"></div>
+<mat-grid-list cols="15" rowHeight="50vh">
+
+  <!-- Autocomplete -->
+  <mat-grid-tile colspan="4" rowspan="1">
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>Number</mat-label>
+        <input type="text"
+               placeholder="Pick one"
+               aria-label="Number"
+               matInput
+               [formControl]="myControl"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </mat-grid-tile>
+
+    <!-- Map Container -->
+    <mat-grid-tile colspan="11" rowspan="2">
+      <div id="map" style="width: 100%; height: 100%;"></div>
+    </mat-grid-tile>
+
+  
+  <!-- Tasks list -->
+  <mat-grid-tile colspan="4" rowspan="1">
+    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+      <div class="example-box" *ngFor="let movie of movies" cdkDrag>
+        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+        {{movie}}
+      </div>
+    </div>
+  </mat-grid-tile>
+
+</mat-grid-list>
