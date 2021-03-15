@@ -9,16 +9,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
-
 
 // Componenets
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-
-// Third Party
-// import { Loader } from "@googlemaps/js-api-loader"
 
 
 @NgModule({
@@ -36,6 +32,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     DragDropModule
   ],
   providers: [],

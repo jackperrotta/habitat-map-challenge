@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { GooglePlaceAutocomplete } from '../../models/google-place-autocomplete';
 import { Loader } from "@googlemaps/js-api-loader";
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 @Component({
@@ -12,13 +12,13 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class DashboardComponent implements OnInit {
   map;
-  addressFormControl = new FormControl();
+  pickupFormControl = new FormControl();
+  dropoffFormControl = new FormControl();
   private autocompleteService;
   addresses: Array<GooglePlaceAutocomplete> = [];
   selectedAddress: GooglePlaceAutocomplete;
   directionsService;
   directionsRenderer;
-  deliveryType: google.maps.TravelMode.DRIVING;
 
   tasks = [
     {
@@ -60,7 +60,8 @@ export class DashboardComponent implements OnInit {
 
       this.autocompleteService = new google.maps.places.AutocompleteService();
 
-      this.addressFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
+      this.pickupFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
+      this.dropoffFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
 
       this.directionsRenderer.setMap(this.map);
 
@@ -87,6 +88,17 @@ export class DashboardComponent implements OnInit {
   autocompleteDisplayFn(address) {
     return address ? address.description : address;
   }
+
+  createTask() {
+    console.log(this.pickupFormControl);
+    if (
+      this.pickupFormControl.value.description || 
+      this.dropoffFormControl.value.description) {
+      
+    } else {
+      window.alert("Please set both the pickup and dropoff addresses.");
+    }
+  };
 
   calculateAndDisplayRoute(
     directionsService: google.maps.DirectionsService,

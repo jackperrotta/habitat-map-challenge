@@ -8,11 +8,10 @@
         <mat-form-field class="example-full-width">
           <mat-label>Set Pickup Address</mat-label>
           <input type="text"
-                #addressField
+                #pickup
                  placeholder="123 Main Street"
-                 aria-label="Number"
                  matInput
-                 [formControl]="addressFormControl"
+                 [formControl]="pickupFormControl"
                  [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
             <mat-option *ngFor="let addr of addresses" [value]="addr">
@@ -20,8 +19,26 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <button>Create Task</button>
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Set Dropoff Address</mat-label>
+          <input type="text"
+                #dropoff
+                 placeholder="123 Main Street"
+                 matInput
+                 [formControl]="dropoffFormControl"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
+            <mat-option *ngFor="let addr of addresses" [value]="addr">
+              {{addr.description}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </form>
+      <button mat-flat-button color="primary" style="margin-left: auto;" (click)="createTask()">
+        Create Task
+      </button>
+
       <!-- Tasks List -->
       <h4>Tasks List</h4>
       <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
