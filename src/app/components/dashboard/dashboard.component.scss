@@ -1,3 +1,7 @@
+h4 {
+  margin-bottom: 8px;
+}
+
 .example-form {
   min-width: 150px;
   max-width: 500px;
@@ -9,8 +13,7 @@
 }
 
 .example-list {
-  width: 500px;
-  max-width: 100%;
+  width: calc(100% - 8px);
   border: solid 1px #ccc;
   min-height: 60px;
   display: block;

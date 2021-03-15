@@ -1,39 +1,51 @@
-<mat-grid-list cols="15" rowHeight="50vh">
-
-  <!-- Autocomplete -->
-  <mat-grid-tile colspan="4" rowspan="1">
-    <form class="example-form">
-      <mat-form-field class="example-full-width">
-        <mat-label>Number</mat-label>
-        <input type="text"
-               placeholder="Pick one"
-               aria-label="Number"
-               matInput
-               [formControl]="myControl"
-               [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
-  </mat-grid-tile>
-
-    <!-- Map Container -->
-    <mat-grid-tile colspan="11" rowspan="2">
-      <div id="map" style="width: 100%; height: 100%;"></div>
-    </mat-grid-tile>
-
-  
-  <!-- Tasks list -->
-  <mat-grid-tile colspan="4" rowspan="1">
-    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let movie of movies" cdkDrag>
-        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-        {{movie}}
+<mat-grid-list cols="12" rowHeight="100vh" gutterSize="8">
+  <!-- Side Panel Container -->
+  <mat-grid-tile colspan="4">
+    <div class="side-panel-container" style="height: 100%; width: 100%; display: flex; flex-direction: column;">
+      <!-- Autocomplete -->
+      <h4>Create a Task</h4>
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <mat-label>Set Pickup Address</mat-label>
+          <input type="text"
+                #addressField
+                 placeholder="123 Main Street"
+                 aria-label="Number"
+                 matInput
+                 [formControl]="addressFormControl"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
+            <mat-option *ngFor="let addr of addresses" [value]="addr">
+              {{addr.description}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <button>Create Task</button>
+      </form>
+      <!-- Tasks List -->
+      <h4>Tasks List</h4>
+      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let task of tasks" cdkDrag>
+          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+          <div style="display: flex; width: 100%; flex-direction: row;">
+            <span>
+              {{task.address}}
+            </span>
+            <span style="margin-left: auto;" [ngClass]="{
+              'bg-blue': task.type == 'Pickup',
+              'bg-purple': task.type == 'Dropoff'
+              }">
+              {{ task.type }}
+            </span>
+          </div>
+          
+        </div>
       </div>
     </div>
   </mat-grid-tile>
 
+  <!-- Map Container -->
+  <mat-grid-tile colspan="8">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+  </mat-grid-tile>
 </mat-grid-list>

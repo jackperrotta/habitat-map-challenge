@@ -1,7 +1,6 @@
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { GooglePlaceAutocomplete } from '../../models/google-place-autocomplete';
 import { Loader } from "@googlemaps/js-api-loader";
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
@@ -13,101 +12,121 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class DashboardComponent implements OnInit {
   map;
-  myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  addressFormControl = new FormControl();
+  private autocompleteService;
+  addresses: Array<GooglePlaceAutocomplete> = [];
+  selectedAddress: GooglePlaceAutocomplete;
+  directionsService;
+  directionsRenderer;
+  deliveryType: google.maps.TravelMode.DRIVING;
 
-  movies = [
-    'Episode I - The Phantom Menace',
-    'Episode II - Attack of the Clones',
-    'Episode III - Revenge of the Sith',
-    'Episode IV - A New Hope',
-    'Episode V - The Empire Strikes Back',
-    'Episode VI - Return of the Jedi',
-    'Episode VII - The Force Awakens',
-    'Episode VIII - The Last Jedi',
-    'Episode IX – The Rise of Skywalker'
+  tasks = [
+    {
+      "type": "Pickup",
+      "address": "609 Gerritt Street"
+    },
+    {
+      "type": "Dropoff",
+      "address": "904 Dickinson Street"
+    },
+    {
+      "type": "Pickup",
+      "address": "1635 Market Street"
+    },
+    {
+      "type": "Dropoff",
+      "address": "6723 Point Pleasant Pike, New Hope, PA"
+    }
   ];
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(){
 
     const loader = new Loader({
       apiKey: "AIzaSyCqqZMYM-I8IKDKf8S7h7g0UyFpS71krkU",
-      version: "weekly"
+      version: "weekly",
+      libraries: ["places"]
     });
     
     loader.load().then(() => {
-      const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer();
+      this.directionsService = new google.maps.DirectionsService();
+      this.directionsRenderer = new google.maps.DirectionsRenderer();
 
       this.map = new google.maps.Map(document.getElementById("map") as HTMLElement, {
         center: { lat: 39.953350, lng: -75.145610 },
         zoom: 12,
       });
 
-      directionsRenderer.setMap(this.map);
+      this.autocompleteService = new google.maps.places.AutocompleteService();
 
-      calculateAndDisplayRoute(
-        directionsService,
-        directionsRenderer
+      this.addressFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
+
+      this.directionsRenderer.setMap(this.map);
+
+      this.calculateAndDisplayRoute(
+        this.directionsService,
+        this.directionsRenderer
       );
-
-      // const onChangeHandler = function () {
-      //   calculateAndDisplayRoute(directionsService, directionsRenderer);
-      // };
-      // (document.getElementById("start") as HTMLElement).addEventListener(
-      //   "change",
-      //   onChangeHandler
-      // );
-      // (document.getElementById("end") as HTMLElement).addEventListener(
-      //   "change",
-      //   onChangeHandler
-      // );
     });
 
-    function calculateAndDisplayRoute(
-      directionsService: google.maps.DirectionsService,
-      directionsRenderer: google.maps.DirectionsRenderer
-    ) {
-      directionsService.route(
-        {
-          origin: {
-            // query: (document.getElementById("start") as HTMLInputElement).value,
-            query: "philadelphia, pa"
-          },
-          destination: {
-            // query: (document.getElementById("end") as HTMLInputElement).value,
-            query: "los angeles, ca"
-          },
-          travelMode: google.maps.TravelMode.DRIVING,
-        },
-        (response, status) => {
-          if (status === "OK") {
-            directionsRenderer.setDirections(response);
-          } else {
-            window.alert("Directions request failed due to " + status);
-          }
-        }
-      );
-    }
-
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  setAddresses(input) {
+    this.selectedAddress = null;
+    if (input === '') return this.addresses = [];
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    this.autocompleteService.getPlacePredictions({input, types: ['address']}, (places, status) => {
+      if (status != google.maps.places.PlacesServiceStatus.OK) this.addresses = [];
+      else this.addresses = places;
+
+      this.cdr.detectChanges();
+    });
+  }
+
+  autocompleteDisplayFn(address) {
+    return address ? address.description : address;
+  }
+
+  calculateAndDisplayRoute(
+    directionsService: google.maps.DirectionsService,
+    directionsRenderer: google.maps.DirectionsRenderer
+  ) {
+    const waypoints: google.maps.DirectionsWaypoint[] = [];
+    const taskWaypoints = this.tasks.slice(1, -1);
+
+  
+    for (let i = 0; i < taskWaypoints.length; i++) {
+      waypoints.push({
+        location: taskWaypoints[i].address,
+        stopover: true,
+      });
+    }
+
+    directionsService.route(
+      {
+        origin: this.tasks[0].address,
+        destination: this.tasks[(this.tasks.length - 1)].address,
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (response, status) => {
+        if (status === "OK" && response) {
+          directionsRenderer.setDirections(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
+    this.calculateAndDisplayRoute(
+      this.directionsService,
+      this.directionsRenderer
+    );
   }
 
 }
