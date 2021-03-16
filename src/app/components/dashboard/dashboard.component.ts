@@ -11,13 +11,13 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class DashboardComponent implements OnInit {
 
-  private map;
+  public map;
 
-  private pickupFormControl = new FormControl();
-  private dropoffFormControl = new FormControl();
+  public pickupFormControl = new FormControl();
+  public dropoffFormControl = new FormControl();
   private autocompleteService;
-  private addresses: Array<GooglePlaceAutocomplete> = [];
-  private selectedAddress: GooglePlaceAutocomplete;
+  public addresses: Array<GooglePlaceAutocomplete> = [];
+  public selectedAddress: GooglePlaceAutocomplete;
 
   private directionsService;
   private directionsRenderer;
@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
   /* TODO: selectedMode sets the carriers route travel method and can be toggled between: DRIVING, BYCYCING, WALKING, TRANSITING */
   private selectedMode = "DRIVING";
 
-  private tasks = [];
+  public tasks = [];
 
   constructor(private cdr: ChangeDetectorRef) { }
 
