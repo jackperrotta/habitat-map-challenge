@@ -1,30 +1,30 @@
-h4 {
-  margin-bottom: 8px;
+
+
+.side-panel-container {
+  height: 100%; 
+  width: 100%; 
+  display: flex; 
+  flex-direction: column;
 }
 
-.example-form {
+.task-form {
   min-width: 150px;
-  max-width: 500px;
   width: 100%;
 }
 
-.example-full-width {
-  width: 100%;
-}
-
-.example-list {
-  width: calc(100% - 8px);
-  border: solid 1px #ccc;
+.draggable-list {
+  width: calc(100% - 4px);
+  border: solid 1px rgb(204, 204, 204);
   min-height: 60px;
   display: block;
-  background: white;
+  background: rgb(255, 255, 255);
   border-radius: 4px;
   overflow: auto;
 }
 
-.example-box {
+.draggable-task-box {
   padding: 20px 10px;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px rgb(204, 204, 204);
   color: rgba(0, 0, 0, 0.87);
   display: flex;
   flex-direction: row;
@@ -32,8 +32,11 @@ h4 {
   justify-content: space-between;
   box-sizing: border-box;
   cursor: move;
-  background: white;
+  background: rgb(255, 255, 255);
   font-size: 14px;
+  &:last-child {
+    border: none;
+  }
 }
 
 .cdk-drag-preview {
@@ -48,17 +51,15 @@ h4 {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.example-box:last-child {
-  border: none;
-}
 
-.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+
+.draggable-list.cdk-drop-list-dragging .draggable-task-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.example-custom-placeholder {
-  background: #ccc;
-  border: dotted 3px #999;
+.draggable-placeholder {
+  background: rgb(204, 204, 204);
+  border: dotted 3px rgb(153, 153, 153);
   min-height: 60px;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }

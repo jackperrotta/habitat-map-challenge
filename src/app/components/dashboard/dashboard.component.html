@@ -1,58 +1,74 @@
 <mat-grid-list cols="12" rowHeight="100vh" gutterSize="8">
   <!-- Side Panel Container -->
   <mat-grid-tile colspan="4">
-    <div class="side-panel-container" style="height: 100%; width: 100%; display: flex; flex-direction: column;">
+    <div class="side-panel-container">
       <!-- Autocomplete -->
       <h4>Create a Task</h4>
-      <form class="example-form">
-        <mat-form-field class="example-full-width">
+      <form class="task-form">
+
+        <!-- Pickup Address Autocomplete -->
+        <mat-form-field class="w-100">
           <mat-label>Set Pickup Address</mat-label>
+
           <input type="text"
-                #pickup
+                 #pickup
                  placeholder="123 Main Street"
                  matInput
                  [formControl]="pickupFormControl"
                  [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
+
+          <mat-autocomplete #auto="matAutocomplete" 
+                            (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
+
             <mat-option *ngFor="let addr of addresses" [value]="addr">
               {{addr.description}}
             </mat-option>
+
           </mat-autocomplete>
         </mat-form-field>
 
-        <mat-form-field class="example-full-width">
+        <!-- Dropoff Address Autocomplete -->
+        <mat-form-field class="w-100">
           <mat-label>Set Dropoff Address</mat-label>
+
           <input type="text"
-                #dropoff
+                 #dropoff
                  placeholder="123 Main Street"
                  matInput
                  [formControl]="dropoffFormControl"
                  [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedAddress = $event.option.value" [displayWith]="autocompleteDisplayFn">
+
+          <mat-autocomplete #auto="matAutocomplete" 
+                            (optionSelected)="selectedAddress = $event.option.value"  [displayWith]="autocompleteDisplayFn">
+
             <mat-option *ngFor="let addr of addresses" [value]="addr">
               {{addr.description}}
             </mat-option>
+
           </mat-autocomplete>
         </mat-form-field>
 
-        <button mat-flat-button color="primary" type="submit" style="float: right;" (click)="createTask()">
+        <button mat-flat-button 
+                color="primary" 
+                type="submit" 
+                class="float-right" 
+                (click)="createTask(); pickup.value = ''; dropoff.value = '';">
           Create Task
         </button>
       </form>
       
-
       <!-- Tasks List -->
       <h4>Tasks List</h4>
-      <div *ngIf="tasks.length > 0" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let task of tasks" cdkDrag>
-          <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-          <div style="display: flex; width: 100%; flex-direction: row;">
+      <div *ngIf="tasks.length > 0" cdkDropList class="draggable-list" (cdkDropListDropped)="drop($event)">
+        <div class="draggable-task-box" *ngFor="let task of tasks" cdkDrag>
+          <div class="draggable-placeholder" *cdkDragPlaceholder></div>
+          <div class="d-flex w-100">
             <span>
               {{task.address}}
             </span>
-            <span style="margin-left: auto;" [ngClass]="{
+            <span class="ml-auto sm-pill" [ngClass]="{
               'bg-blue': task.type == 'Pickup',
-              'bg-purple': task.type == 'Dropoff'
+              'bg-pink': task.type == 'Dropoff'
               }">
               {{ task.type }}
             </span>
@@ -67,6 +83,6 @@
 
   <!-- Map Container -->
   <mat-grid-tile colspan="8">
-    <div id="map" style="width: 100%; height: 100%;"></div>
+    <div id="map" class="w-100 h-100"></div>
   </mat-grid-tile>
 </mat-grid-list>
