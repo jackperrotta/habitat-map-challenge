@@ -19,25 +19,8 @@ export class DashboardComponent implements OnInit {
   selectedAddress: GooglePlaceAutocomplete;
   directionsService;
   directionsRenderer;
-
-  tasks = [
-    {
-      "type": "Pickup",
-      "address": "609 Gerritt Street"
-    },
-    {
-      "type": "Dropoff",
-      "address": "904 Dickinson Street"
-    },
-    {
-      "type": "Pickup",
-      "address": "1635 Market Street"
-    },
-    {
-      "type": "Dropoff",
-      "address": "6723 Point Pleasant Pike, New Hope, PA"
-    }
-  ];
+  selectedMode = "DRIVING";
+  tasks = [];
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -58,17 +41,13 @@ export class DashboardComponent implements OnInit {
         zoom: 12,
       });
 
+      this.directionsRenderer.setMap(this.map);
+
       this.autocompleteService = new google.maps.places.AutocompleteService();
 
       this.pickupFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
       this.dropoffFormControl.valueChanges.subscribe(addr =>this.setAddresses(addr));
 
-      this.directionsRenderer.setMap(this.map);
-
-      this.calculateAndDisplayRoute(
-        this.directionsService,
-        this.directionsRenderer
-      );
     });
 
   }
@@ -90,13 +69,25 @@ export class DashboardComponent implements OnInit {
   }
 
   createTask() {
-    console.log(this.pickupFormControl);
-    if (
-      this.pickupFormControl.value.description || 
-      this.dropoffFormControl.value.description) {
-      
+    if (this.pickupFormControl.pristine || this.dropoffFormControl.pristine ) {
+        window.alert("Please set both the pickup and dropoff addresses.");
     } else {
-      window.alert("Please set both the pickup and dropoff addresses.");
+      this.tasks.push(
+        {
+          type: "Pickup",
+          address: this.pickupFormControl.value.description
+        },
+        {
+          type: "Dropoff",
+          address: this.dropoffFormControl.value.description
+        }
+      );
+      this.calculateAndDisplayRoute(
+        this.directionsService,
+        this.directionsRenderer
+      );
+      this.pickupFormControl.value.description = "";
+      this.dropoffFormControl.value.description = "";
     }
   };
 
@@ -121,7 +112,7 @@ export class DashboardComponent implements OnInit {
         destination: this.tasks[(this.tasks.length - 1)].address,
         waypoints: waypoints,
         optimizeWaypoints: true,
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: google.maps.TravelMode[this.selectedMode]
       },
       (response, status) => {
         if (status === "OK" && response) {

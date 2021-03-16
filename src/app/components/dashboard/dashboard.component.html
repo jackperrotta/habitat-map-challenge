@@ -34,14 +34,16 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" style="float: right;" (click)="createTask()">
+          Create Task
+        </button>
       </form>
-      <button mat-flat-button color="primary" style="margin-left: auto;" (click)="createTask()">
-        Create Task
-      </button>
+      
 
       <!-- Tasks List -->
       <h4>Tasks List</h4>
-      <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+      <div *ngIf="tasks.length > 0" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
         <div class="example-box" *ngFor="let task of tasks" cdkDrag>
           <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
           <div style="display: flex; width: 100%; flex-direction: row;">
@@ -55,9 +57,11 @@
               {{ task.type }}
             </span>
           </div>
-          
         </div>
       </div>
+      <p *ngIf="tasks.length == 0">
+        Their are no tasks yet, please use the form above to create your first tasks.
+      </p>
     </div>
   </mat-grid-tile>
 
