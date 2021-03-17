@@ -1,5 +1,13 @@
 # habitat-map-challenge
 
+This project was built using Angular CLI which is required to run this app locally.
+
+### Local Dev Server
+Run ng serve for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+
+### Production Server
+I've hosted this project on Heroku and can be accessed using this link: https://habitat-map-challenge.herokuapp.com/
+
 ### Challenge Summary
 A core part of our business is the ability to efficiently route our runners between restaurant pickups and customer deliveries, including 'batched' orders (runner has 2+ orders in their queue simultaneously). Dispatchers being able to visualize a runner's route is crucial to a smooth operation.
 
