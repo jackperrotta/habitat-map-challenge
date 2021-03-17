@@ -39,7 +39,8 @@
                  [matAutocomplete]="auto">
 
           <mat-autocomplete #auto="matAutocomplete" 
-                            (optionSelected)="selectedAddress = $event.option.value"  [displayWith]="autocompleteDisplayFn">
+                            (optionSelected)="selectedAddress = $event.option.value" 
+                            [displayWith]="autocompleteDisplayFn">
 
             <mat-option *ngFor="let addr of addresses" [value]="addr">
               {{addr.description}}
